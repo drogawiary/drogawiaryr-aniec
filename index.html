@@ -1,298 +1,348 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TAJEMNICE RÓŻAŃCA ŚWIĘTEGO</title>
-  <link rel="icon" type="image/png" href="aplikacje.png">
-  <style>
-    /* Zmiennie i bazowe style */
-    :root{
-      --bg:#fbfaf7;
-      --card:#ffffff;
-      --ink:#1f2430;
-      --muted:#667085;
-      --blue:#0a4fa3;          /* tło niebieskiego bloku */
-      --border:#e6e6ea;
-      --radius:16px;
-      --shadow:0 8px 28px rgba(0,0,0,.08);
-      --accent:#1f5fbf;
-    }
-    .dark{
-      --bg:#10131a;
-      --card:#141824;
-      --ink:#e7ecf6;
-      --muted:#aab3c6;
-      --blue:#0b3d7a;
-      --border:#263049;
-      --shadow:0 8px 28px rgba(0,0,0,.45);
-      --accent:#7fb0ff;
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Różaniec — interaktywnie</title>
 
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: ui-serif, Georgia, "Times New Roman", serif;
-      background:var(--bg);
-      color:var(--ink);
-      line-height:1.6;
-    }
+<!-- Stały tryb jasny, łagodny styl jak w Droga Wiary -->
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#1b2a49">
 
-    /* Topbar */
-    .topbar{
-      position:sticky; top:0; z-index:10;
-      background:var(--card);
-      border-bottom:1px solid var(--border);
-      display:flex; align-items:center; justify-content:space-between;
-      padding:14px 18px;
-    }
-    .topbar h1{
-      font-size: clamp(18px, 2.6vw, 28px);
-      margin:0;
-      letter-spacing:.2px;
-    }
-    .mode-btn{
-      border:1px solid var(--border);
-      background:transparent;
-      color:var(--ink);
-      border-radius:999px;
-      padding:8px 12px;
-      cursor:pointer;
-    }
+<style>
+*{box-sizing:border-box;-webkit-text-size-adjust:100%}
+html,body{margin:0;padding:0}
+body{font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif;color:var(--text);background:var(--bg)}
+:root{--bg:#1b2a49;--panel:#22355c;--panel-2:#1d2e50;--text:#e7ecf6;--muted:#aab3c6;--accent:#4a8cff;--accent-2:#7aa8ff;--ring:#6ea8ff33;--soft:#223b6d}
+.wrap{max-width:900px;margin:0 auto;padding:16px;background:linear-gradient(180deg,var(--panel),var(--panel-2));border-radius:20px;box-shadow:0 0 20px #0003}
+header.book{background:linear-gradient(145deg,#0b3d91,#1565c0,#1e88e5);color:#fff;text-align:center;padding:32px 20px;border-radius:20px 20px 0 0;font-size:clamp(28px,5vw,40px);font-family:'Playfair Display',serif;text-shadow:0 0 8px #fff,0 0 16px #a8c8ff;box-shadow:inset 0 0 10px #ffffff22,0 2px 8px #0002;font-weight:800}
+.topbar{background:linear-gradient(180deg,#22355c 0%,#1b2a49 100%);border-radius:14px;padding:12px 16px;box-shadow:0 0 10px #4f7fff55;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:8px;align-items:center}
+.btnlink{border:1px solid var(--ring);background:var(--panel);padding:8px 14px;border-radius:10px;cursor:pointer;font-weight:700;color:var(--text)}
+.bigbtn{font-size:16px;font-weight:800;letter-spacing:.2px;background:var(--panel);border:1px solid var(--ring);border-radius:12px;padding:10px 14px;cursor:pointer;color:var(--text);transition:box-shadow .25s, transform .15s}
+.bigbtn.primary{background:var(--accent);color:#fff;border-color:transparent}
+.bigbtn.active{box-shadow:0 0 0 3px #4f7fff33,0 0 18px 2px var(--accent-2);transform:scale(1.02)}
+.panel{margin-top:12px;background:var(--panel);border:1px solid var(--ring);border-radius:14px;padding:14px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:var(--panel-2);border:1px solid var(--ring);border-radius:10px;padding:8px 10px;cursor:pointer;font-weight:700;color:var(--text)}
+.chip.active{outline:2px solid var(--accent-2);background:var(--soft)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.space{flex:1}
+.hide{display:none!important}
+footer{margin:16px 0 0;background:var(--panel);border:1px solid var(--ring);border-radius:14px;color:var(--text);text-align:center;padding:16px;box-shadow:0 6px 16px #0003}
+footer .fmuted{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+footer a{color:var(--text);text-decoration:none;font-weight:700}
+footer a:hover{color:var(--accent-2)}
+.hint{display:block;margin-top:10px;font-size:13px;color:var(--muted);font-style:italic;text-align:center}
+.progress{height:10px;background:var(--panel-2);border:1px solid var(--ring);border-radius:999px;overflow:hidden;margin:10px 0 8px}
+.progress>div{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .3s}
+.content{background:var(--panel-2);border:1px solid var(--ring);border-radius:14px;padding:14px;min-height:210px;max-height:70vh;overflow-y:auto}
+blockquote{margin:0 0 8px;padding:8px 12px;border-left:3px solid var(--accent-2);background:#ffffff10;border-radius:8px}
+.muted { color: var(--muted); }
 
-    /* Wrapper */
-    .wrap{
-      max-width: 1050px;
-      margin: 28px auto;
-      padding: 0 16px 56px;
-    }
-
-    /* Karty */
-    .card{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding: 18px;
-      margin: 18px 0 28px;
-    }
-    .section-title{
-      font-size: clamp(18px, 2.2vw, 24px);
-      margin: 0 0 14px;
-      border-left:6px solid var(--accent);
-      padding-left:10px;
-    }
-
-    /* Niebieskie pole na treść/listy */
-    .list-box,
-    .prayer-box{
-      background: var(--blue);
-      color: #fff;
-      border-radius: calc(var(--radius) - 4px);
-      padding: clamp(14px, 3vw, 24px);
-    }
-    .list-box ul{
-      margin:0;
-      padding-left: 1.2rem;
-      list-style: disc inside;
-    }
-    .list-box li,
-    .list-box p,
-    .prayer-box p{
-      font-size: clamp(16px, 2.1vw, 20px);
-      margin:.35rem 0;
-    }
-    .list-box li::marker{ color:#fff; }
-
-    /* Cytat/lead i drobne akcenty */
-    .lead{ font-size: clamp(18px, 2.3vw, 22px); line-height:1.75; }
-    blockquote{
-      margin:12px 0; padding:8px 12px;
-      border-left:4px solid rgba(255,255,255,.6);
-      opacity:.95;
-    }
-    .note{ font-size:.95rem; color:var(--muted); }
-
-    /* Separator – tylko ramka (bez wypełnienia) */
-    #radosne{
-      border: 2px solid #001a44;  /* granatowa ramka */
-      border-radius: 12px;
-      padding: 40px;
-      margin: 28px 0;
-      background: none;
-    }
-    #radosne .list-box{
-      all: unset;
-      display:block;
-    }
-
-    /* Pasek nawigacyjny (dół i góra) */
-    .nav-bar { text-align:center; margin: 30px 0; }
-    .nav-btn{
-      display:inline-block; margin:8px; padding:10px 20px;
-      background: var(--blue, #0a4fa3); color:#fff; font-size:16px;
-      border-radius: 12px; text-decoration:none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      transition: background .3s, transform .2s;
-    }
-    .nav-btn:hover{ background:#083d80; transform: translateY(-2px); }
-  </style>
+</style>
 </head>
 <body>
-  <!-- Nagłówek -->
-  <header class="topbar">
-    <h1>Głębokie znaczenie modlitwy „Zdrowaś Maryjo”</h1>
-    <button class="mode-btn" id="modeBtn" aria-label="Przełącz tryb">🌓 Dzień / Noc</button>
-  </header>
+<div class="wrap">
+  <header class="book">Różaniec</header>
+  <div class="topbar">
+    <button id="applyToday" class="btnlink" type="button">Ustaw dzisiejszą część</button>
+    <button id="startBtn" class="bigbtn primary" type="button">Start</button>
+  </div>
 
-  <!-- Pasek nawigacyjny (góra) -->
-  <nav class="nav-bar">
-    <a href="https://majstered.github.io/R/" class="nav-btn">📿 Różaniec</a>
-    <a href="https://majstered.github.io/N/" class="nav-btn">Nowenna</a>
-    <a href="https://majstered.github.io/Modlitwy/" class="nav-btn">🙏Różne Modlitwy Maryjne</a>
-
-  </nav>
-
-  <main class="wrap">
-
-<section class="card" id="wprowadzenie">
-  <p style="margin:0; font-size:clamp(19px,2.4vw,24px);">
-    Wielu ludzi zna na pamięć treść modlitwy „Zdrowaś Maryjo”. Wypowiada ją codziennie, czasem dziesiątki razy. 
-    A jednak niewielu do końca przeczuwa jej głębię i niewyobrażalną moc, która płynie z jej treści.
-  </p>
-</section>
-
-
-    <!-- Zdrowaś – frazy -->
-    <section class="card" id="fraza-1">
-      <h2 class="section-title">„Zdrowaś, łaski pełna, Pan z Tobą”</h2>
-      <div class="prayer-box">
-        <p>— słowa anioła Gabriela (Łk 1,28). Bóg sam posyła swego posłańca, by ogłosił Maryi, że jest pełna łaski i że Jego obecność będzie zawsze przy Niej.</p>
+  <div id="startPanel" class="panel">
+    <div class="row" style="margin-top:8px">
+      <div class="chips" id="chips">
+        <div class="chip" data-part="radosne">Tajemnice radosne (pon/sob)</div>
+        <div class="chip" data-part="bolesne">Tajemnice bolesne (wt/pt)</div>
+        <div class="chip" data-part="swiatla">Tajemnice światła (czw)</div>
+        <div class="chip" data-part="chwalebne">Tajemnice chwalebne (śr/nd)</div>
       </div>
-    </section>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <button id="introBtn" class="bigbtn" type="button">Wprowadzenie</button>
+      <button id="endBtn" class="bigbtn" type="button">Dziękczynienie</button>
+    </div>
+  </div>
 
-    <section class="card" id="fraza-2">
-      <h2 class="section-title">„Błogosławiona jesteś między niewiastami”</h2>
-      <div class="prayer-box">
-        <p>— słowa Elżbiety, napełnionej Duchem Świętym (Łk 1,42). To okrzyk radości wobec Tej, która niesie w sobie Boga.</p>
-      </div>
-    </section>
+  <div id="readPanel" class="panel hide">
+    <div class="progress"><div id="bar"></div></div>
+    <div class="content">
+      <h3 id="stepTitle" style="margin:0 0 6px;font-size:18px">Tytuł</h3>
+      <div id="stepBody" class="muted"></div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <button id="prevBtn" class="bigbtn" type="button">⟵ Wstecz</button>
+      <button id="nextBtn" class="bigbtn primary" type="button">Dalej ⟶</button>
+      <button id="finishBtn" class="bigbtn hide" type="button">Zakończ część</button>
+    </div>
+  </div>
 
-    <section class="card" id="fraza-3">
-      <h2 class="section-title">„Błogosławiony owoc żywota Twojego – Jezus”</h2>
-      <div class="prayer-box">
-        <p>W samym sercu modlitwy wypowiadamy imię Zbawiciela. To jak pocałunek złożony na Jego imieniu w łonie Maryi, tak jakbyśmy stali obok Elżbiety, która wołała: „A skądże mi to, że Matka mojego Pana przychodzi do mnie?” (Łk 1,43).</p>
-      </div>
-    </section>
+  <footer>
+    <div>„Codzienny różaniec” © 2025</div>
+    <a href="https://drogawiary.github.io/" rel="noopener">Strona --> drogawiary@wp.pl</a>
+  </footer>
 
-        <section class="card" id="fraza-4">
-      <h2 class="section-title">„Módl się za nami, grzesznymi”</h2>
-      <div class="prayer-box">
-        <p>To nasza pokorna prośba, by Ta, która nosiła Boga, zaniosła nasz szept przed Jego tron.
 
-Wypowiadając „Zdrowaś Maryjo”, stajemy się uczestnikami tamtego spotkania: z Aniołem zwiastującym cud, z Maryją, która słucha i wierzy, z Elżbietą, która rozpoznaje swego Pana, a przede wszystkim — z Jezusem, który przychodzi do nas cicho, ale naprawdę.</p>
-      </div>
-    </section>
+</div>
 
-    <!-- Separator – tylko ramka -->
-    <section class="card" id="radosne">
-      <div class="list-box" aria-hidden="true"><!-- czysta ramka, bez treści --></div>
-    </section>
+<script>
+(function(){
+  // ===== Mapy i stałe =====
+  const DAY_TO_PART={0:"chwalebne",1:"radosne",2:"bolesne",3:"chwalebne",4:"swiatla",5:"bolesne",6:"radosne"};
+  const PART_NAME={radosne:"Tajemnice Radosne",bolesne:"Tajemnice Bolesne",swiatla:"Tajemnice Światła",chwalebne:"Tajemnice Chwalebne"};
+  const PARTS=["radosne","bolesne","swiatla","chwalebne"];
+  const S={ step:"rozaniec:step:", done:"rozaniec:done:", lastDate:"rozaniec:lastDate", lastPart:"rozaniec:lastPart" };
 
-    <!-- Obietnice Maryi -->
-    <section class="card" id="obietnice">
-      <h2 class="section-title">🌹 Obietnice Maryi dla odmawiających różaniec</h2>
-      <div class="list-box">
-        <blockquote>„Ja was nie opuszczę. Wasza Matka.”</blockquote>
-        <p>Jak powiedziała s. Fernanda z Fatimy: „Różaniec jest jak mleko dla dziecka – pierwszy pokarm dla duszy. Gdy zaczynasz go pić, zaczynasz rosnąć duchowo, a Maryja bierze cię za rękę i prowadzi do Jezusa.”</p>
-        <p>Maryja powtarzała to we wszystkich miejscach objawień: <em>„Odmawiajcie codziennie różaniec.”</em></p>
-        <blockquote>„Różaniec odmawiany z wiarą i pobożnością jest wielkim ratunkiem dla dusz i środkiem do zwycięstwa nad szatanem.”</blockquote>
-        <blockquote>„Jedno Zdrowaś Maryjo świadomie i uważnie odmówione ma większą wartość niż setki mechanicznie wypowiedzianych słów.” — św. Ludwik Maria Grignion de Montfort</blockquote>
-        <blockquote>„Różaniec to modlitwa tych, którzy kochają, ale nie wiedzą, jak mówić.” — św. Jan Paweł II</blockquote>
-        <blockquote>„Różaniec to łańcuch, który łączy nas z Bogiem.” — św. Teresa z Lisieux</blockquote>
-        <blockquote>„Jeśli chcesz nawrócić grzesznika, odmów za niego różaniec.” — św. Jan Maria Vianney</blockquote>
-        <blockquote>„Gdy mówisz różaniec, Maryja jest tuż obok ciebie.” — św. Alfons Maria Liguori</blockquote>
+  // ===== Narzędzia czasu/pamięci =====
+  function warsawDate(){ return new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Warsaw',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()); }
+  function todays(){ const label=new Intl.DateTimeFormat('pl-PL',{weekday:'long',timeZone:'Europe/Warsaw'}).format(new Date()); const m={"niedziela":0,"poniedziałek":1,"wtorek":2,"środa":3,"czwartek":4,"piątek":5,"sobota":6}; const d=m[label]??0; return {label,dow:d,part:DAY_TO_PART[d]}; }
+  function keyStep(p){return S.step+p}
+  function keyDone(p){return S.done+p}
+  function savedStep(p){ const v=parseInt(localStorage.getItem(keyStep(p)),10); return Number.isFinite(v)? Math.min(Math.max(v,0), totalSteps()-1) : 0; }
+  function isDone(p){ return localStorage.getItem(keyDone(p))==="1" }
+  function setDone(p,val){ if(val){ localStorage.setItem(keyDone(p),"1"); } else { localStorage.removeItem(keyDone(p)); } }
+  function saveStep(p,v){ localStorage.setItem(keyStep(p), String(v)); }
+  function rememberPart(p){ if(p) localStorage.setItem(S.lastPart,p); }
+  function resetIfNewDay(){ const today=warsawDate(); const last=localStorage.getItem(S.lastDate); if(last && last!==today){ PARTS.forEach(p=>{ localStorage.removeItem(keyStep(p)); localStorage.removeItem(keyDone(p)); }); } localStorage.setItem(S.lastDate,today); }
+  function scheduleMidnightReset(){ const now=new Date(); const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Warsaw',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(now); const y=+parts.find(p=>p.type==='year').value, m=+parts.find(p=>p.type==='month').value, d=+parts.find(p=>p.type==='day').value; const next=new Date(Date.UTC(y,m-1,d+1,0,0,0)); const ms=next-now; setTimeout(()=>{ resetIfNewDay(); }, Math.max(1000, ms)); }
 
-        <p class="lead">Z modlitwy Kościoła, z przekazów objawień oraz świadectw świętych i zwykłych ludzi wyłania się pewna, cicha obietnica Maryi: wytrwały różaniec przynosi wielkie łaski.</p>
+  // ===== Treści =====
+  const WSTEP_HTML=`<p><strong>✝️ Znak krzyża</strong><br/>W imię Ojca i Syna, i Ducha Świętego. Amen.</p><p><strong>Ojcze nasz</strong></p><p><strong>3× Zdrowaś Maryjo</strong> (o wiarę, nadzieję i miłość)</p><p><strong>Wierzę w Boga</strong> (Skład Apostolski)</p>`;
+  const HINT='<span class="hint">Odmów: Ojcze nasz • 10× Zdrowaś Maryjo</span>';
+  const CONTENT={
+    radosne:{name:PART_NAME.radosne,intro:{title:"Modlitwy wstępne",body:WSTEP_HTML},items:[
+      {title:"I – Zwiastowanie",body:`<blockquote><strong>„Oto ja służebnica Pańska, niech mi się stanie według słowa Twojego.”</strong><br><em>(Łk 1,38)</em></blockquote>
+<p>Maryja przyjmuje wolę Boga z ufnością — to najpiękniejsza chwila w Jej życiu, gdy Słowo staje się ciałem. A my: czy potrafimy powiedzieć Bogu „niech się stanie”, nawet gdy nie wszystko rozumiemy?</p>`,hint:true},
+      {title:"II – Nawiedzenie",body:`<blockquote><strong>„Błogosławiona jesteś, któraś uwierzyła, że spełnią się słowa powiedziane Ci od Pana.”</strong><br><em>(Łk 1,45)</em></blockquote>
+<p>Maryja niesie Boga drugiemu człowiekowi i budzi radość wiary w domu Elżbiety. A my: czy potrafimy zanieść Ewangelię w zwykłej codzienności — słowem, gestem, obecnością?</p>`,hint:true},
+      {title:"III – Narodzenie",body:`<blockquote><strong>„Porodziła swego pierworodnego Syna, owinęła Go w pieluszki i położyła w żłobie.”</strong><br><em>(Łk 2,7)</em></blockquote>
+<p>Bóg przychodzi w prostocie i ubóstwie, nie szuka pałacu — szuka serca. Czy w moim sercu jest dla Niego miejsce, gdy przychodzi po cichu?</p>`,hint:true},
+      {title:"IV – Ofiarowanie",body:`<blockquote><strong>„Moje oczy ujrzały Twoje zbawienie, które przygotowałeś wobec wszystkich narodów.”</strong><br><em>(Łk 2,30–31)</em></blockquote>
+<p>Symeon rozpoznaje w Dzieciątku Zbawiciela; Maryja uczy, że miłość potrafi oddać to, co najcenniejsze. Czy ja umiem ofiarować Bogu moje plany i lęki?</p>`,hint:true},
+      {title:"V – Odnalezienie",body:`<blockquote><strong>„Czemuście Mnie szukali? Czy nie wiedzieliście, że powinienem być w tym, co należy do mego Ojca?”</strong><br><em>(Łk 2,49)</em></blockquote>
+<p>Maryja i Józef odnajdują Jezusa w świątyni. A my — czy potrafimy odnaleźć Go <strong>w naszych świątyniach</strong>: w Eucharystii, w ciszy modlitwy, we wspólnocie? Kto szuka z sercem, ten odnajdzie.</p>`,hint:true}
+    ],outro:{title:"Ukończyłeś dzisiaj tę część różańca",body:"Możesz wrócić i wybrać inną część."}},
 
-        <ul>
-          <li><strong>Szczególna opieka w życiu i przy śmierci.</strong></li>
-          <li><strong>Nawrócenie największych grzeszników</strong> — wytrwała modlitwa kruszy najtwardsze serca.</li>
-          <li><strong>Ochrona przed pokusami i złem</strong> — każde „Zdrowaś” jest ciosem w szatana i tarczą dla duszy.</li>
-          <li><strong>Pokój w rodzinach.</strong></li>
-          <li><strong>Uzdrowienia duszy i ciała</strong> — świadectwa z Lourdes, Fatimy, Gietrzwałdu.</li>
-          <li><strong>Wysłuchanie próśb</strong> zgodnie z wolą Bożą i dla zbawienia.</li>
-          <li><strong>Pomoc w trudnościach</strong> — „Odmawiajcie różaniec, a otrzymacie łaski potrzebne w życiu.”</li>
-          <li><strong>Przygotowanie na trudne czasy</strong> — kto trzyma się różańca, nie zginie.</li>
-        </ul>
-      </div>
-    </section>
+    bolesne:{name:PART_NAME.bolesne,intro:{title:"Modlitwy wstępne",body:WSTEP_HTML},items:[
+      {title:"I – Modlitwa Jezusa w Ogrójcu",body:`<blockquote><strong>„Ojcze, jeśli chcesz, zabierz ode Mnie ten kielich! Jednak nie moja wola, lecz Twoja niech się stanie.”</strong><br><em>(Łk 22,42)</em></blockquote><p>Jezus modli się w samotności, zmagając z lękiem i bólem. Nie ucieka — ufa Ojcu. Czy ja w chwilach trudu też potrafię powiedzieć: „Nie moja, lecz Twoja wola, Panie”?</p>`,hint:true},
+      {title:"II – Biczowanie Pana Jezusa",body:`<blockquote><strong>„Wtedy Piłat wziął Jezusa i kazał Go ubiczować.”</strong><br><em>(J 19,1)</em></blockquote><p>Każdy grzech rani Serce Jezusa. On przyjmuje cierpienie w milczeniu, z miłości do nas. Czy mam świadomość, że moje słabości też pozostawiają ślad na Jego ciele?</p>`,hint:true},
+      {title:"III – Cierniem ukoronowanie",body:`<blockquote><strong>„A uplótłszy koronę z cierni, włożyli Mu ją na głowę.”</strong><br><em>(J 19,2)</em></blockquote><p>Ludzie szydzą, a On milczy. Pokorna wierność Jezusa w upokorzeniu uczy nas, że prawdziwa chwała rodzi się z pokory. Czy potrafię milczeć, gdy jestem niesprawiedliwie oceniany?</p>`,hint:true},
+      {title:"IV – Dźwiganie krzyża",body:`<blockquote><strong>„A On sam dźwigał krzyż na miejsce zwane Czaszką.”</strong><br><em>(J 19,17)</em></blockquote><p>Jezus niesie krzyż aż na Golgotę — krok po kroku, w milczeniu, z miłości. Na tej drodze spotyka cierpienie, ale też ludzkie serca, które pomagają Mu nieść ciężar. Czy ja pomagam nieść cudze krzyże, czy tylko unikam własnych?</p>`,hint:true},
+      {title:"V – Ukrzyżowanie i śmierć Jezusa",body:`<blockquote><strong>„Ojcze, przebacz im, bo nie wiedzą, co czynią.”</strong><br><em>(Łk 23,34)</em></blockquote><p>Z krzyża płynie przebaczenie — dla wszystkich, którzy ranią. Miłość Jezusa nie zna granic, nawet w chwili śmierci. Czy ja potrafię przebaczyć tym, którzy mnie skrzywdzili?</p>`,hint:true}
+    ],outro:{title:"Ukończyłeś dzisiaj tę część różańca",body:"Możesz wrócić i wybrać inną część."}},
 
-    <!-- Nowenna Pompejańska -->
-    <section class="card" id="nowenna-pompejanska">
-      <h2 class="section-title">🌹 Nowenna Pompejańska — „Modlitwa nie do odparcia”</h2>
-      <div class="list-box">
-        <p>— Bartolo Longo, 1879</p>
-        <p>54 dni modlitwy bez przerwy: trzy nowenny błagalne i trzy dziękczynne. Świadectwa mówią o szczególnych łaskach:</p>
-        <ul>
-          <li>uzdrowienia z chorób uznanych za nieuleczalne,</li>
-          <li>uratowanie małżeństw i rodzin,</li>
-          <li>uwolnienie od nałogów,</li>
-          <li>łaska wiary dla osób niewierzących,</li>
-          <li>pokój serca w sytuacjach bez wyjścia.</li>
-        </ul>
-        <p>Wielu nazywa ją „modlitwą nie do odparcia” — Maryja odpowiada na nią szczególnie hojnie.</p>
-      </div>
-    </section>
+    swiatla:{name:PART_NAME.swiatla,intro:{title:"Modlitwy wstępne",body:WSTEP_HTML},items:[
+      {title:"I – Chrzest Jezusa w Jordanie",body:`<blockquote><strong>„Tyś jest mój Syn umiłowany, w Tobie mam upodobanie.”</strong><br><em>(Łk 3,22)</em></blockquote><p>Jezus wchodzi do wody nie dlatego, że potrzebuje oczyszczenia, ale by uświęcić nasze życie. Czy pamiętam o łasce mojego chrztu – o dniu, w którym Bóg nazwał mnie swoim dzieckiem?</p>`,hint:true},
+      {title:"II – Cud w Kanie Galilejskiej",body:`<blockquote><strong>„Zróbcie wszystko, cokolwiek wam powie.”</strong><br><em>(J 2,5)</em></blockquote><p>Maryja wskazuje na Jezusa – to Ona pierwsza uczy zaufania. Czy słucham głosu Boga w moim życiu, czy raczej chcę, by to On słuchał mnie?</p>`,hint:true},
+      {title:"III – Głoszenie Królestwa Bożego",body:`<blockquote><strong>„Czas się wypełnił i bliskie jest królestwo Boże. Nawracajcie się i wierzcie w Ewangelię.”</strong><br><em>(Mk 1,15)</em></blockquote><p>Jezus przynosi Dobrą Nowinę – mówi o miłosierdziu, prawdzie i przebaczeniu. Czy pozwalam, by Jego słowo naprawdę zmieniało moje życie?</p>`,hint:true},
+      {title:"IV – Przemienienie na Górze Tabor",body:`<blockquote><strong>„To jest mój Syn umiłowany, Jego słuchajcie!”</strong><br><em>(Mk 9,7)</em></blockquote><p>Uczniowie widzą Jezusa w chwale – na chwilę dotykają nieba. Czy potrafię słuchać Jezusa w ciszy serca, nie tylko wtedy, gdy dzieją się cuda?</p>`,hint:true},
+      {title:"V – Ustanowienie Eucharystii",body:`<blockquote><strong>„To jest Ciało moje, które za was będzie wydane.”</strong><br><em>(Łk 22,19)</em></blockquote><p>W Eucharystii Jezus daje siebie cały. Czy rozumiem, że Komunia to nie symbol, ale prawdziwe spotkanie Boga z człowiekiem?</p>`,hint:true}
+    ],outro:{title:"Ukończyłeś dzisiaj tę część różańca",body:"Możesz wrócić i wybrać inną część."}},
 
-    <!-- 15 obietnic różańcowych -->
-    <section class="card" id="15-obietnic">
-      <h2 class="section-title">🌹 15 obietnic różańcowych — „Różaniec będzie ocaleniem świata.”</h2>
-      <div class="list-box">
-        <p><strong>Wprowadzenie historyczne:</strong> bł. Alan de la Roche (XV w.) odnowił praktykę różańca; tradycja przypisuje mu przekaz 15 obietnic dla wiernie odmawiających różaniec.</p>
-        <p><em>„Te obietnice nie są kontraktem. To odpowiedź Miłości na modlitwę serca.”</em></p>
-        <ol>
-          <li>Tym, którzy wiernie będą odmawiać mój Różaniec, obiecuję szczególną opiekę i wielkie łaski.</li>
-          <li>Otrzymają szczególną ochronę i wielkich orędowników w niebie.</li>
-          <li>Różaniec będzie potężną bronią przeciw piekłu; zniszczy grzech, umniejszy winę i zwycięży herezje.</li>
-          <li>Spowoduje rozkwit cnót i dobrych uczynków; wyprosi wiele miłosierdzia dla dusz.</li>
-          <li>Dusza, która poleca się mnie przez Różaniec, nie zginie.</li>
-          <li>Wierny różańcowi nie zostanie pokonany przez nieszczęścia.</li>
-          <li>Sprawiedliwy — wytrwa w łasce; grzesznik — nawróci się.</li>
-          <li>Miłujący Różaniec otrzymają w życiu i przy śmierci światło Boże i pełnię łaski.</li>
-          <li>Wybawię z czyśćca tych, którzy odmawiali mój Różaniec z miłością.</li>
-          <li>Wierni tej modlitwie osiągną wysoki stopień chwały w niebie.</li>
-          <li>Otrzymacie wszystko, o co prosicie przez Różaniec, jeśli zgodne z wolą Syna.</li>
-          <li>Szerzącym mój Różaniec pomogę we wszystkich potrzebach.</li>
-          <li>Wpiszę odmawiających Różaniec w moje Niepokalane Serce.</li>
-          <li>Odmawiający Różaniec są moimi umiłowanymi dziećmi, a ja ich Matką.</li>
-          <li>Różaniec to znak zbawienia: kto go nosi i modli się z wiarą, będzie bezpieczny w godzinie śmierci.</li>
-        </ol>
-      </div>
-    </section>
+    chwalebne:{name:PART_NAME.chwalebne,intro:{title:"Modlitwy wstępne",body:WSTEP_HTML},items:[
+      {title:"I – Zmartwychwstanie Jezusa",body:`<blockquote><strong>„Dlaczego szukacie żyjącego wśród umarłych? Nie ma Go tu – zmartwychwstał.”</strong><br><em>(Łk 24,5–6)</em></blockquote><p>Zmartwychwstanie to zwycięstwo miłości nad śmiercią. Czy wierzę, że Bóg może ożywić to, co w moim życiu umarło?</p>`,hint:true},
+      {title:"II – Wniebowstąpienie",body:`<blockquote><strong>„A oto Ja jestem z wami przez wszystkie dni, aż do skończenia świata.”</strong><br><em>(Mt 28,20)</em></blockquote><p>Jezus odchodzi do Ojca, ale nie zostawia nas samych. Czy wierzę, że Jego obecność jest bliżej niż myślę?</p>`,hint:true},
+      {title:"III – Zesłanie Ducha Świętego",body:`<blockquote><strong>„I wszyscy zostali napełnieni Duchem Świętym.”</strong><br><em>(Dz 2,4)</em></blockquote><p>Duch Święty przemienia serca uczniów i daje im odwagę. Czy modlę się o Ducha Świętego w moim codziennym życiu?</p>`,hint:true},
+      {title:"IV – Wniebowzięcie Najświętszej Maryi Panny",body:`<blockquote><strong>„Błogosławiona jesteś, Maryjo, bo uwierzyłaś, że spełnią się słowa powiedziane Ci od Pana.”</strong><br><em>(Łk 1,45)</em></blockquote><p>Maryja zostaje wzięta do nieba – to znak nadziei dla wszystkich wierzących. Czy moje życie prowadzi ku niebu?</p>`,hint:true},
+      {title:"V – Ukoronowanie Maryi na Królową nieba i ziemi",body:`<blockquote><strong>„Wielbi dusza moja Pana, bo wejrzał na uniżenie swojej służebnicy.”</strong><br><em>(Łk 1,46–48)</em></blockquote><p>Maryja króluje nie z tronu, ale z serca pełnego pokory. Czy ja potrafię służyć, jak Ona – z radością i bez oczekiwania chwały?</p>`,hint:true}
+    ],outro:{title:"Ukończyłeś dzisiaj tę część różańca",body:"Możesz wrócić i wybrać inną część."}}
+  };
 
-  </main>
+  // ===== Elementy UI =====
+  const qs=s=>document.querySelector(s);
+  const chips=qs('#chips');
+  const applyToday=qs('#applyToday');
+  const introBtn=qs('#introBtn');
+  const endBtn=qs('#endBtn');
+  const startBtn=qs('#startBtn');
+  const startPanel=qs('#startPanel');
+  const readPanel=qs('#readPanel');
+  const stepTitle=qs('#stepTitle');
+  const stepBody=qs('#stepBody');
+  const bar=qs('#bar');
+  const prevBtn=qs('#prevBtn');
+  const nextBtn=qs('#nextBtn');
+  const finishBtn=qs('#finishBtn');
 
-  <!-- Pasek nawigacyjny (dół) -->
-  <nav class="nav-bar">
-    <a href="https://majstered.github.io/M/" class="nav-btn">🏠 Do góry</a>
-  </nav>
+  // ===== Stan =====
+  let currentPart=null; // nazwa części
+  let step=0;           // indeks kroku 0..6
+  let introMode=false;  // tryb Wprowadzenie
+  let endMode=false;    // tryb Dziękczynienie
 
-  <script>
-    // Tryb Dzień/Noc z pamięcią
-    (function(){
-      const key = 'theme-preference';
-      const btn = document.getElementById('modeBtn');
-      function applyTheme(val){ document.documentElement.classList.toggle('dark', val === 'dark'); }
-      function current(){ return document.documentElement.classList.contains('dark') ? 'dark' : 'light'; }
-      const saved = localStorage.getItem(key);
-      if(saved){ applyTheme(saved); }
-      else if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){ applyTheme('dark'); }
-      btn.addEventListener('click', ()=>{
-        const next = current()==='dark' ? 'light' : 'dark';
-        applyTheme(next); localStorage.setItem(key, next);
-      });
-    })();
-  </script>
+  // ===== Dzienna pamięć =====
+  resetIfNewDay();
+  scheduleMidnightReset();
+
+  // ===== Render =====
+  function totalSteps(){return 7}
+  function showStart(){startPanel.classList.remove('hide');readPanel.classList.add('hide');introBtn.classList.remove('active');endBtn.classList.remove('active');}
+  function showRead(){readPanel.classList.remove('hide');startPanel.classList.add('hide')}
+
+  function renderStep(){
+    if(introMode){
+      const t=todays();
+      stepTitle.textContent='Wprowadzenie';
+stepBody.innerHTML = `
+<p><strong>Dlaczego bywa tak ciężko?</strong> Wielu świętych mówiło, że właśnie dlatego różaniec bywa trudny:
+bo diabeł wie, jak wielką moc ma ta modlitwa. Wie, że jedno „Zdrowaś” może ocalić duszę,
+że różaniec w rękach dziecka jest groźniejszy dla piekła niż największa armia.
+Dlatego odciąga nas rozproszeniem, znużeniem, myślą, że to „nudne” albo „niepotrzebne”.</p>
+
+<p>Gdy trudno ci zacząć, zatrzymaj się na chwilę i pomyśl o słowach modlitwy „Zdrowaś Maryjo”.
+Spróbuj <strong>przytulić się sercem do Maryi</strong> – jak dziecko do swojej Matki.
+Ona rozumie wszystko: twoje zmęczenie, rozproszenia, lęki i brak siły.
+Chce tylko jednego – byś pozwolił Jej poprowadzić cię do Jezusa, jak najlepsza z matek prowadzi dziecko za rękę.</p>
+
+<p>Z czułością wypowiadasz słowa, które <strong>Anioł Gabriel</strong> przyniósł do Niej z orędziem nieba:
+<em>„Zdrowaś Maryjo, łaski pełna, Pan z Tobą.”</em>
+To były najważniejsze słowa w Jej życiu – zwiastowały, że zostanie Matką samego Boga.
+A potem dołączasz do głosu <strong>świętej Elżbiety</strong>, która z zachwytem i wiarą zawołała:
+<em>„Błogosławionaś Ty między niewiastami i błogosławiony owoc żywota Twojego, Jezus.”</em></p>
+
+<p>Kiedy więc mówisz „Zdrowaś Maryjo”, <strong>nie jesteś sam</strong>.
+Maryja, Elżbieta i Anioł są przy tobie – naprawdę.
+To nie recytacja, lecz <strong>rozmowa z Matką</strong>, która słucha z miłością i niesie twoje słowa do swojego Syna.
+W tej modlitwie nie tylko wspominasz, ale <strong>uczestniczysz w tajemnicy spotkania Boga z człowiekiem</strong>.</p>
+
+<p>
+  Postaraj się odmawiać różaniec nie w pośpiechu, lecz ze zrozumieniem.
+  Bo gdy modlisz się tylko po to, by „zdążyć” lub „zaliczyć” modlitwę —
+  pomyśl, czy Maryi nie jest wtedy smutno?
+</p>
+
+
+<p>Maryja powtarzała to we wszystkich miejscach swoich objawień:
+<strong>„Odmawiajcie codziennie różaniec.”</strong></p>
+
+<p><em>Jak powiedziała s. Fernanda z Fatimy:</em><br>
+<strong>„Różaniec jest jak mleko dla dziecka – pierwszy pokarm dla duszy.
+Gdy zaczynasz go pić, zaczynasz rosnąć duchowo, a Maryja bierze cię za rękę i prowadzi do Jezusa.”</strong></p>
+
+<hr style="margin:10px 0;opacity:0.5;">
+
+<p>Z modlitwy Kościoła, z objawień i świadectw świętych wyłania się cicha obietnica:
+<strong>wytrwały różaniec przynosi wielkie łaski.</strong></p>
+
+<ul>
+  <li>Szczególna opieka w życiu i przy śmierci.</li>
+  <li>Nawrócenie największych grzeszników — nawet najtwardsze serce może się skruszyć.</li>
+  <li>Ochrona przed złem — każde „Zdrowaś Maryjo” to cios w szatana i tarcza dla duszy.</li>
+  <li>Pokój w rodzinach.</li>
+  <li>Uzdrowienia duszy i ciała — świadectwa z Lourdes, Fatimy, Gietrzwałdu.</li>
+  <li>Wysłuchanie próśb zgodnie z wolą Bożą.</li>
+  <li>Pomoc w trudnościach — „Odmawiajcie różaniec, a otrzymacie łaski potrzebne w życiu.”</li>
+  <li>Przygotowanie na trudne czasy — kto trzyma się różańca, nie zginie.</li>
+</ul>
+`;
+
+      nextBtn.classList.add('hide');
+      finishBtn.classList.add('hide');
+      if(bar) bar.style.width='0%';
+      return;
+    }
+    if(endMode){
+      stepTitle.textContent='Dziękczynienie';
+      stepBody.innerHTML=`
+<p><em>Dziękuję Ci, Maryjo, że pozwoliłaś mi odkryć moc tej modlitwy.</em></p>
+
+<p><strong>„Różaniec odmawiany z wiarą i pobożnością jest ratunkiem dla duszy i zwycięstwem nad szatanem.”</strong><br>
+<strong>„Jedno Zdrowaś Maryjo świadomie i uważnie odmówione ma większą wartość niż setki bezmyślnych słów.”</strong><br>
+— św. Ludwik Maria Grignion de Montfort</p>
+
+<p><strong>„Różaniec to modlitwa tych, którzy kochają, ale nie wiedzą, jak mówić.”</strong><br>
+— św. Jan Paweł II</p>
+
+<p><strong>„Różaniec to łańcuch, który łączy nas z Bogiem.”</strong><br>
+— św. Teresa z Lisieux</p>
+
+<p><strong>„Jeśli chcesz nawrócić grzesznika, odmów za niego różaniec.”</strong><br>
+— św. Jan Maria Vianney</p>
+
+<p><strong>„Gdy mówisz różaniec, Maryja jest tuż obok ciebie.”</strong><br>
+— św. Alfons Maria Liguori</p>
+
+<hr style="margin:10px 0;opacity:0.5;">
+
+<p>Różaniec jest modlitwą pełną obietnic. Maryja obiecuje pomoc, ochronę, pokój i łaski tym, którzy trwają z Nią na modlitwie.
+Ale pamiętaj — każda modlitwa ma w sobie wartość ofiary.</p>
+
+<p>To nie jest wygodne siedzenie — to dar z siebie.  
+Gdy klękasz z różańcem, gdy bolą kolana albo plecy — właśnie wtedy modlitwa nabiera mocy.  
+Wtedy oddajesz coś z siebie Bogu.  
+Bo jeśli prosisz Go o łaskę, pokaż Mu, że chcesz w niej uczestniczyć całym sercem i ciałem.</p>
+
+<p><em>Nie musisz mieć wielkiej wiary, żeby zacząć – zacznij, by wiara mogła w tobie wzrosnąć.  
+Nie musisz mieć siły, żeby wytrwać – weź różaniec, a siła przyjdzie sama.  
+Nie musisz być święty, żeby się modlić – ale modlitwa może cię uczynić świętym.</em></p>
+
+<p><strong>Spróbuj choć dziesiątkę. To jak otwarcie małego okna — a przez nie wejdzie światło.</strong></p>`;
+      nextBtn.classList.add('hide');
+      finishBtn.classList.add('hide');
+      if(bar) bar.style.width='100%';
+      return;
+    }
+    let d=CONTENT[currentPart];
+    if(!d){ currentPart='radosne'; d=CONTENT[currentPart]; }
+
+    const max=totalSteps();
+    let title,body;
+    if(step===0){ title=d.intro.title; body=d.intro.body; }
+    else if(step===max-1){ title=d.outro.title; body=d.outro.body; }
+    else { const it=d.items[step-1]; title=it.title; body=it.body + (it.hint? ' '+HINT : ''); }
+
+    stepTitle.textContent=title;
+    stepBody.innerHTML=body;
+
+    // zapis postępu + pasek
+    saveStep(currentPart, step);
+    if(bar){ const pct=Math.round((step/(max-1))*100); bar.style.width=pct+'%'; }
+
+    nextBtn.classList.toggle('hide', step===max-1);
+    finishBtn.classList.toggle('hide', step!==max-1);
+  }
+
+  // ===== Zdarzenia =====
+  function setActiveChip(){ document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active', x.dataset.part===currentPart)); }
+
+  chips.addEventListener('click',e=>{ const c=e.target.closest('.chip'); if(!c) return; currentPart=c.dataset.part; rememberPart(currentPart); step = isDone(currentPart) ? totalSteps()-1 : savedStep(currentPart); setActiveChip(); });
+  chips.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ const c=e.target.closest('.chip'); if(!c) return; currentPart=c.dataset.part; rememberPart(currentPart); step = isDone(currentPart) ? totalSteps()-1 : savedStep(currentPart); setActiveChip(); e.preventDefault(); }});
+
+  applyToday.addEventListener('click',()=>{
+    const t = todays();
+    currentPart = t.part;
+    rememberPart(currentPart);
+    step = isDone(currentPart) ? totalSteps()-1 : savedStep(currentPart);
+    setActiveChip();
+    introMode = false;
+    endMode = false;
+    showStart();
+  });
+
+  startBtn.addEventListener('click',()=>{
+    introMode=false; endMode=false; introBtn.classList.remove('active'); endBtn.classList.remove('active');
+    if(!currentPart){ const last=localStorage.getItem(S.lastPart); if(last && PARTS.includes(last)) currentPart=last; else currentPart=todays().part; }
+    step = isDone(currentPart) ? totalSteps()-1 : savedStep(currentPart);
+    rememberPart(currentPart);
+    showRead();
+    renderStep();
+  });
+
+  introBtn.addEventListener('click',()=>{ introMode=true; endMode=false; introBtn.classList.add('active'); endBtn.classList.remove('active'); showRead(); renderStep(); });
+  endBtn.addEventListener('click',()=>{ endMode=true; introMode=false; endBtn.classList.add('active'); introBtn.classList.remove('active'); showRead(); renderStep(); });
+
+  prevBtn.addEventListener('click',()=>{ if(introMode||endMode){ introMode=false; endMode=false; showStart(); return; } if(step===0){ showStart(); return; } step=Math.max(0,step-1); renderStep(); });
+  nextBtn.addEventListener('click',()=>{ step=Math.min(totalSteps()-1,step+1); renderStep(); });
+  finishBtn.addEventListener('click',()=>{ setDone(currentPart,true); step=totalSteps()-1; saveStep(currentPart, step); rememberPart(currentPart); showStart(); setActiveChip(); });
+
+  // ===== Inicjalizacja =====
+  document.documentElement.classList.add('dark');
+  resetIfNewDay();
+  const last=localStorage.getItem(S.lastPart);
+  currentPart = PARTS.includes(last)? last : todays().part;
+  step = isDone(currentPart) ? totalSteps()-1 : savedStep(currentPart);
+  setActiveChip();
+})();
+</script>
 </body>
 </html>
